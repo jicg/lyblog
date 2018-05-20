@@ -1,6 +1,6 @@
 # Lyblog (beego+layui)
 
-layui 提供了社区模版，本人想用也用时间用beego作为后台，实现社区功能。
+layui 提供了社区模版，本人想用beego作为后台，实现社区功能。
 
 
 ## 欢迎RP
