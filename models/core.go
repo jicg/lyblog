@@ -27,7 +27,7 @@ func init() {
 			//密码
 			Pass: "123123",
 			//头像地址
-			Avatar: "/static/image/fly.jpg",
+			Avatar: "/static/images/avatar/default.png",
 			//是否认证 例： lyblog 作者
 			Approve: true,
 			//性别 男0 女1

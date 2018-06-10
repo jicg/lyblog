@@ -17,18 +17,16 @@
 <script src="/static/layui/layui.js">
 </script>
 <script>
-    {{/*{{ if .User eq nil }}*/}}
     layui.cache.page = '{{ .page }}';
     layui.cache.user = {
-    username: '{{.User.username}}'||'游客'
-    ,uid: {{ .User.id }}||-1
-    ,avatar: '{{.User.avatar}}'||'/static/images/avatar/00.jpg'
-    ,experience: {{.User.experience}}
-    ,sum: {{.User.rmb}}
-    ,vip: {{ .User.rmb}}
-    ,sex: '{{.User.sex}}'||'男'
+    username: '{{.User.UserName}}'||'游客'
+    ,uid: {{ .User.Id }}||-1
+    ,avatar: '{{.User.Avatar}}'||'/static/images/avatar/00.jpg'
+    ,experience: {{.User.Experience}}
+    ,sum: {{.User.Rmb}}
+    ,vip: {{ .User.Rmb}}
+    ,sex: '{{.User.Sex}}'||'男'
     };
-    {{/*{{ end }}*/}}
     layui.config({
         version: "0.01",
         base: '/static/mods/'

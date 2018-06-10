@@ -62,9 +62,13 @@ func GetRandVerification() (*Verification, error) {
 }
 
 func GetUser(email, pass string) (*User, error) {
-	user := &User{}
-	if err := o.Read(&User{Email: email, Pass: pass}, "Email", "Pass"); err != nil {
+	user := &User{Email: email, Pass: pass}
+	if err := o.Read(user, "Email", "Pass"); err != nil {
 		return nil, err
 	}
 	return user, nil
+}
+
+func SaveUser(user *User) (int64, error) {
+	return o.Insert(user)
 }

@@ -17,13 +17,16 @@ type Ret struct {
 	Status int    `json:"status"`
 	Msg    string `json:"msg"`
 	Action string `json:"action"`
+	Count  int    `json:"count"`
 }
 
 func (ctx *BaseController) Prepare() {
 	user := ctx.GetSession(USER_KEY)
+	ctx.Data["IsLogin"] = false
 	if user != nil {
 		ctx.user = user.(*models.User)
-		ctx.Data["User"] = user
+		ctx.Data["User"] = ctx.user
+		ctx.Data["IsLogin"] = true
 	}
 	ctx.Data["Title"] = "论坛"
 }
@@ -47,6 +50,15 @@ func (ctx *BaseController) ToOK(msg string, actions ... interface{}) {
 	}
 	ctx.Data["json"] = &Ret{
 		Status: 0, Msg: msg, Action: action,
+	}
+	ctx.ServeJSON()
+	ctx.StopRun()
+}
+
+func (ctx *BaseController) ToOKCount( count int) {
+
+	ctx.Data["json"] = &Ret{
+		Status: 0, Count: count,
 	}
 	ctx.ServeJSON()
 	ctx.StopRun()
