@@ -1,27 +1,38 @@
 <div class="fly-footer">
-    <p><a href="http://fly.layui.com/" target="_blank">Fly社区</a> 2017 &copy; <a href="http://www.layui.com/"
-                                                                                target="_blank">layui.com 出品</a></p>
+    <p><a href="http://fly.layui.com/">Fly社区</a>
+    {{/*{{ new Date().getFullYear() }} */}}
+        &copy; <a href="http://www.layui.com/">layui.com</a></p>
     <p>
         <a href="http://fly.layui.com/jie/3147/" target="_blank">付费计划</a>
-        <a href="http://www.layui.com/template/fly/" target="_blank">获取Fly社区模版</a>
+        <a href="http://fly.layui.com/jie/8157/" target="_blank">获取Fly社区模版</a>
         <a href="http://fly.layui.com/jie/2461/" target="_blank">微信公众号</a>
+    </p>
+    <p class="fly-union">
+        <a href="https://www.upyun.com?from=layui" target="_blank" rel="nofollow" upyun>
+        {{/*<img src="{{d.res}}/images/other/upyun.png?t=1"></a>*/}}
+            <span>提供 CDN 赞助</span>
     </p>
 </div>
 
-<script src="/static/layui/layui.js"></script>
+<script src="/static/layui/layui.js">
+</script>
 <script>
-    layui.cache.page = '';
+    {{/*{{ if .User eq nil }}*/}}
+    layui.cache.page = '{{ .page }}';
     layui.cache.user = {
-        username: '游客'
-        , uid: -1
-        , avatar: '../res/images/avatar/00.jpg'
-        , experience: 83
-        , sex: '男'
+    username: '{{.User.username}}'||'游客'
+    ,uid: {{ .User.id }}||-1
+    ,avatar: '{{.User.avatar}}'||'/static/images/avatar/00.jpg'
+    ,experience: {{.User.experience}}
+    ,sum: {{.User.rmb}}
+    ,vip: {{ .User.rmb}}
+    ,sex: '{{.User.sex}}'||'男'
     };
+    {{/*{{ end }}*/}}
     layui.config({
-        version: "3.0.0"
-        , base: '/static/mods/'  //这里实际使用时，建议改成绝对路径
+        version: "0.01",
+        base: '/static/mods/'
     }).extend({
-        fly: 'index'
+        'fly': 'index'
     }).use('fly');
 </script>
