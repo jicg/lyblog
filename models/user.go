@@ -18,7 +18,7 @@ type User struct {
 	//是否认证 例： lyblog 作者
 	Approve bool
 	//性别 男0 女1
-	Sex int8
+	Sex int
 	//城市
 	City string
 	//签名

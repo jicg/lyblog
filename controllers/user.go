@@ -11,6 +11,20 @@ type UserController struct {
 	BaseController
 }
 
+
+func (c *UserController) Page() string {
+	return "user"
+}
+
+// @router /set [get]
+func (c *UserController) UserSet() {
+	if !c.IsLogin {
+		c.Redirect("/user/login", 302)
+		return
+	}
+	c.TplName = "user/set.html"
+}
+
 // @router /login [get]
 func (c *UserController) LoginPage() {
 	verify, err := models.GetRandVerification()
@@ -117,5 +131,5 @@ func (c *UserController) Reg() {
 // @router /logout [get]
 func (c *UserController) Logout() {
 	c.SetSession(USER_KEY, nil)
-	c.Redirect("/user/login", 301)
+	c.Redirect("/user/login", 302)
 }

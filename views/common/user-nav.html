@@ -1,34 +1,29 @@
 <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
-  <li class="layui-nav-item">
-      {{/*{{168*user.id}}*/}}
-    <a href="/u/dfasd/">
+  <li class="layui-nav-item ">
+    <a href="/u/{{multiply 168 .User.Id}}">
       <i class="layui-icon">&#xe609;</i>
       我的主页
     </a>
   </li>
-{{/*{{ d.pageType === 'user' ? 'layui-this' : '' }}*/}}
-  <li class="layui-nav-item ">
+  <li class="layui-nav-item {{if  eq2 .RouterPattern "/user"}}layui-this{{end}}">
     <a href="/user/">
       <i class="layui-icon">&#xe612;</i>
       用户中心
     </a>
   </li>
-        {{/*{{ d.pageType === 'user/set' ? 'layui-this' : '' }}*/}}
-  <li class="layui-nav-item ">
+  <li class="layui-nav-item {{if  eq2 .RouterPattern "/user/set"}}layui-this{{end}}">
     <a href="/user/set/">
       <i class="layui-icon">&#xe620;</i>
       基本设置
     </a>
   </li>
-        {{/*{{ d.pageType === 'user/message' ? 'layui-this' : '' }}*/}}
-  <li class="layui-nav-item ">
+  <li class="layui-nav-item {{if  eq2 .RouterPattern "/user/message"}}layui-this{{end}}">
     <a href="/user/message/">
       <i class="layui-icon">&#xe611;</i>
       我的消息
     </a>
   </li>
-        {{/*{{ d.pageType === 'auth/get' ? 'layui-this' : '' }}*/}}
-  <li class="layui-nav-item ">
+  <li class="layui-nav-item {{if  eq2 .RouterPattern "/auth/get"}}layui-this{{end}}" >
     <a href="/auth/get/">
       <i class="layui-icon">&#xe61e;</i>
       产品授权

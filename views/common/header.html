@@ -1,4 +1,3 @@
-
 <div class="fly-header layui-bg-black">
     <div class="layui-container">
         <a class="fly-logo" href="/">
@@ -21,12 +20,12 @@
             <li class="layui-nav-item">
                 <a class="fly-nav-avatar" href="javascript:;">
                     <cite class="layui-hide-xs">{{.User.UserName}}</cite>
-                {{/*{{if not (.User.Approve eq "") }}*/}}
-                    {{/*<i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：{{ .User.approve }}"></i>*/}}
-                {{/*{{ end }}*/}}
-                {{/*{{ if not (.User.Rmb eq 0) }}*/}}
-                    {{/*<i class="layui-badge fly-badge-vip layui-hide-xs">VIP{{.User.Rmb}}</i>*/}}
-                {{/*{{end }}*/}}
+                {{if noteq2 .User.Approve "" }}
+                    <i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：{{ .User.Approve }}"></i>
+                {{ end }}
+                {{ if noteq2 .User.Rmb 0 }}
+                    <i class="layui-badge fly-badge-vip layui-hide-xs">VIP{{.User.Rmb}}</i>
+                {{end }}
                     <img src="{{ .User.Avatar }}">
                 </a>
                 <dl class="layui-nav-child">

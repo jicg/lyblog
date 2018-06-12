@@ -17,7 +17,7 @@
 <script src="/static/layui/layui.js">
 </script>
 <script>
-    layui.cache.page = '{{ .page }}';
+    layui.cache.page = '{{ .Page }}';
     layui.cache.user = {
     username: '{{.User.UserName}}'||'游客'
     ,uid: {{ .User.Id }}||-1

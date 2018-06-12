@@ -10,7 +10,8 @@ const USER_KEY = "USER"
 
 type BaseController struct {
 	beego.Controller
-	user *models.User
+	User    *models.User
+	IsLogin bool
 }
 
 type Ret struct {
@@ -23,12 +24,26 @@ type Ret struct {
 func (ctx *BaseController) Prepare() {
 	user := ctx.GetSession(USER_KEY)
 	ctx.Data["IsLogin"] = false
+	ctx.IsLogin = false
 	if user != nil {
-		ctx.user = user.(*models.User)
-		ctx.Data["User"] = ctx.user
+		ctx.User = user.(*models.User)
+		ctx.Data["User"] = ctx.User
+		ctx.IsLogin = true
 		ctx.Data["IsLogin"] = true
 	}
 	ctx.Data["Title"] = "论坛"
+	ctx.Data["Page"] = ctx.Page()
+	beego.Info(ctx.Data["RouterPattern"], ctx.Data["Page"])
+}
+
+func (ctx *BaseController) Finish() {
+
+	ctx.Data["Page"] = ctx.Page()
+	beego.Info("Finish", ctx.Data["Page"])
+}
+
+func (c *BaseController) Page() string {
+	return "index"
 }
 
 func (ctx *BaseController) ToError(msg string) {
@@ -55,7 +70,7 @@ func (ctx *BaseController) ToOK(msg string, actions ... interface{}) {
 	ctx.StopRun()
 }
 
-func (ctx *BaseController) ToOKCount( count int) {
+func (ctx *BaseController) ToOKCount(count int) {
 
 	ctx.Data["json"] = &Ret{
 		Status: 0, Count: count,
