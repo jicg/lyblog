@@ -154,11 +154,11 @@ layui.define(['laypage', 'fly', 'element', 'flow'], function(exports){
   });
 
   //根据ip获取城市
-  if($('#L_city').val() === ''){
-    $.getScript('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js', function(){
-      $('#L_city').val(remote_ip_info.city||'');
-    });
-  }
+  // if($('#L_city').val() === ''){
+  //   $.getScript('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js', function(){
+  //     $('#L_city').val(remote_ip_info.city||'');
+  //   });
+  // }
 
   //上传图片
   if($('.upload-img')[0]){

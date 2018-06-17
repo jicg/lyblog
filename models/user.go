@@ -72,3 +72,7 @@ func GetUser(email, pass string) (*User, error) {
 func SaveUser(user *User) (int64, error) {
 	return o.Insert(user)
 }
+
+func UpdateUser(user *User) (int64, error) {
+	return o.Update(user, "UserName", "Email", "Pass", "Avatar", "Approve", "Sex", "City", "Sign")
+}

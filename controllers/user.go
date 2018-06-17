@@ -5,24 +5,124 @@ import (
 	"strings"
 	"github.com/astaxie/beego"
 	"time"
+	"path"
+	"os"
+	"fmt"
+)
+
+const (
+	PATH_IMG_AVATAR = "data/asset/avatar/"
+	URL_AVATAR      = "/asset/avatar/"
 )
 
 type UserController struct {
 	BaseController
 }
 
+func (this *UserController) NestPrepare() {
+	this.Data["Page"] = "user"
+}
 
 func (c *UserController) Page() string {
 	return "user"
 }
 
+// @router /upload [post]
+func (c *UserController) Upload() {
+	if err := os.MkdirAll(PATH_IMG_AVATAR, 0777); err != nil {
+		beego.Error(err)
+		c.ToError(err.Error())
+		return
+	}
+
+	if !c.IsLogin {
+		c.ToError("请重写登陆")
+		return
+	}
+	f, _, err := c.GetFile("file")
+	defer f.Close()
+	if err != nil {
+		c.ToError(err.Error())
+		return
+	}
+	filename := fmt.Sprintf("%d.avatar", 233*c.User.Id) //h.Filename
+	fpath := path.Join(PATH_IMG_AVATAR, filename)
+
+	err = c.SaveToFile("file", fpath)
+	if err != nil {
+		c.ToError(err.Error())
+		return
+	}
+	c.ToOKH("修改成功！", RetH{
+		"url": path.Join(URL_AVATAR, filename),
+	})
+}
+
 // @router /set [get]
-func (c *UserController) UserSet() {
+func (c *UserController) Set() {
 	if !c.IsLogin {
 		c.Redirect("/user/login", 302)
 		return
 	}
 	c.TplName = "user/set.html"
+}
+
+// @router /set [post]
+func (c *UserController) Update() {
+	if !c.IsLogin {
+		c.ToError("请重写登陆")
+		return
+	}
+	if email := c.GetString("email", c.User.Email); len(email) != 0 {
+		c.User.Email = email
+	} else {
+		c.ToError("邮箱不能为空")
+		return
+	}
+
+	if name := c.GetString("username", c.User.UserName); len(name) != 0 {
+		c.User.UserName = name
+	} else {
+		c.ToError("昵称不能为空")
+		return
+	}
+
+	c.User.Sex, _ = c.GetInt("sex", c.User.Sex)
+
+	if city := c.GetString("city", c.User.City); len(city) != 0 {
+		c.User.City = city
+	} else {
+		c.ToError("城市不能为空")
+		return
+	}
+
+	if sign := c.GetString("sign", c.User.Sign); len(sign) != 0 {
+		c.User.Sign = sign
+	} else {
+		c.ToError("签名不能为空")
+		return
+	}
+
+	if avatar := c.GetString("avatar", c.User.Avatar); len(avatar) != 0 {
+		c.User.Avatar = avatar
+	}
+
+	//密码
+	pass := c.GetString("pass", "")
+	if len(pass) > 0 {
+		repass := c.GetString("repass", "")
+		if pass != repass {
+			c.ToError("两次密码输入不同！")
+		}
+		c.User.Pass = pass
+	}
+
+	if _, err := models.UpdateUser(c.User); err != nil {
+		c.ToError("修改失败：" + err.Error())
+		return
+	}
+
+	c.ToOK("修改成功！")
 }
 
 // @router /login [get]

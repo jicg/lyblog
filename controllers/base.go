@@ -8,6 +8,10 @@ import (
 
 const USER_KEY = "USER"
 
+type NestPreparer interface {
+	NestPrepare()
+}
+
 type BaseController struct {
 	beego.Controller
 	User    *models.User
@@ -20,6 +24,7 @@ type Ret struct {
 	Action string `json:"action"`
 	Count  int    `json:"count"`
 }
+type RetH map[string]interface{}
 
 func (ctx *BaseController) Prepare() {
 	user := ctx.GetSession(USER_KEY)
@@ -32,24 +37,17 @@ func (ctx *BaseController) Prepare() {
 		ctx.Data["IsLogin"] = true
 	}
 	ctx.Data["Title"] = "论坛"
-	ctx.Data["Page"] = ctx.Page()
-	beego.Info(ctx.Data["RouterPattern"], ctx.Data["Page"])
-}
-
-func (ctx *BaseController) Finish() {
-
-	ctx.Data["Page"] = ctx.Page()
-	beego.Info("Finish", ctx.Data["Page"])
-}
-
-func (c *BaseController) Page() string {
-	return "index"
+	ctx.Data["Page"] = "index"
+	if app, ok := ctx.AppController.(NestPreparer); ok {
+		app.NestPrepare()
+	}
 }
 
 func (ctx *BaseController) ToError(msg string) {
 	ctx.Data["json"] = &Ret{
 		Status: 1, Msg: msg,
 	}
+	beego.Error(msg)
 	ctx.ServeJSON()
 	ctx.StopRun()
 }
@@ -66,6 +64,14 @@ func (ctx *BaseController) ToOK(msg string, actions ... interface{}) {
 	ctx.Data["json"] = &Ret{
 		Status: 0, Msg: msg, Action: action,
 	}
+	ctx.ServeJSON()
+	ctx.StopRun()
+}
+
+func (ctx *BaseController) ToOKH(msg string, rets RetH) {
+	rets["status"] = 0;
+	rets["msg"] = msg;
+	ctx.Data["json"] = rets
 	ctx.ServeJSON()
 	ctx.StopRun()
 }

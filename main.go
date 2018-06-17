@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"fmt"
 	"strconv"
+	"path"
 )
 
 func init() {
@@ -42,5 +43,6 @@ func main() {
 		}
 		return x1 * y1
 	})
+	beego.SetStaticPath("asset", path.Join("data", "asset"))
 	beego.Run()
 }
