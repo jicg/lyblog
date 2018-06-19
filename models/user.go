@@ -69,6 +69,14 @@ func GetUser(email, pass string) (*User, error) {
 	return user, nil
 }
 
+func GetUserByEmail(email string) (*User, error) {
+	user := &User{Email: email}
+	if err := o.Read(user, "Email"); err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
 func SaveUser(user *User) (int64, error) {
 	return o.Insert(user)
 }

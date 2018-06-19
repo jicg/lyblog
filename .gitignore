@@ -20,12 +20,11 @@ lastupdate.tmp
 lyblog
 tests
 data
-routers/commentsRouter_controllers.go
+routers/commentsRouter_*.go
 controllers/object.go
 models/object.go
 views1
 views2
-
 
 .DS_Store
 */.DS_Store
