@@ -11,5 +11,6 @@ install:
   - go get github.com/mattn/go-sqlite3
   - go get github.com/twinj/uuid
   - go get github.com/axgle/mahonia
+  - go github.com/smartystreets/goconvey
 
 #go_import_path: github.com/jicg/lyblog
