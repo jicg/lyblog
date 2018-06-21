@@ -1,5 +1,5 @@
 # Lyblog (beego+layui)
-[![Build Status](https://travis-ci.org/jicg/lyblog.svg?branch=master)](http://godoc.org/github.com/astaxie/beego)  
+[![Build Status](https://travis-ci.org/jicg/lyblog.svg?branch=master)](https://github.com/jicg/lyblog)  
 
 layui 提供了社区模版，本人想用beego作为后台，实现社区功能。
 
