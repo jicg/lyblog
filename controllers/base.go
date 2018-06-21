@@ -7,6 +7,11 @@ import (
 	"github.com/astaxie/beego/cache"
 	"strings"
 	"fmt"
+	"time"
+	"io/ioutil"
+	"github.com/jicg/lyblog/sysutils"
+	"github.com/astaxie/beego/httplib"
+	"errors"
 )
 
 const (
@@ -131,6 +136,33 @@ func (ctx *BaseController) RemoteUrl() string {
 	///user/forget_email?email=%s&token=%s
 	url := fmt.Sprintf("%s%s", scheme, ctx.Ctx.Request.Host)
 	return url
+}
+
+func (c *BaseController) SendEmail(title, email, token, callurl string) error {
+	beego.Info("0---  ", time.Now().Unix())
+	//向forget_email发请求获取，发送邮箱的html
+	url := fmt.Sprintf("%s/api/template_email?title=%s&email=%s&token=%s&callurl=%s", c.RemoteUrl(), title, email, token, callurl)
+	resp, err := httplib.Get(url).DoRequest()
+	if err != nil {
+		return err
+	}
+	status := resp.StatusCode
+	bs, err := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
+	if err != nil {
+		return err
+	}
+	if status != 200 {
+		return errors.New(string(bs))
+	}
+	beego.Info("1---  ", time.Now().Unix())
+	//发送邮件
+	err = sysutils.SendEmail(sysutils.NewEmail(email, "找回密码", string(bs), "html"))
+	beego.Info("2---  ", time.Now().Unix())
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func init() {

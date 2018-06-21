@@ -8,46 +8,11 @@ import (
 	"os"
 	"fmt"
 	"github.com/jicg/lyblog/sysutils"
-	"github.com/astaxie/beego/httplib"
-	"io/ioutil"
 )
 
 const (
 	PATH_IMG_AVATAR = "data/asset/avatar/"
 	URL_AVATAR      = "/asset/avatar/"
-)
-
-var (
-	email_tpl = `
-	<table border="0" cellpadding="0" cellspacing="0"
-       style="width: 600px; border: 1px solid #ddd; border-radius: 3px; color: #555; font-family: 'Helvetica Neue Regular',Helvetica,Arial,Tahoma,'Microsoft YaHei','San Francisco','微软雅黑','Hiragino Sans GB',STHeitiSC-Light; font-size: 12px; height: auto; margin: auto; overflow: hidden; text-align: left; word-break: break-all; word-wrap: break-word;">
-    <tbody style="margin: 0; padding: 0;">
-    <tr style="background-color: #393D49; height: 60px; margin: 0; padding: 0;">
-        <td style="margin: 0; padding: 0;">
-            <div style="color: #5EB576; margin: 0; margin-left: 30px; padding: 0;">
-                <a style="font-size: 14px; margin: 0; padding: 0; color: #5EB576; text-decoration: none;"
-                   href="{{ .Host }}" target="_blank">
-                    {{.Title}}</a>
-            </div>
-        </td>
-    </tr>
-    <tr style="margin: 0; padding: 0;">
-        <td style="margin: 0; padding: 30px;">
-            <p style="line-height: 20px; margin: 0; margin-bottom: 10px; padding: 0;">
-                你好，<em style="font-weight: 700;">{{.User}}</em>童鞋，请在30分钟内重置您的密码： </p>
-            <div style=""><a
-                    href="{{.AuthUrl}}"
-                    style="background-color: #009E94; color: #fff; display: inline-block; height: 32px; line-height: 32px; margin: 0 15px 0 0; padding: 0 15px; text-decoration: none;"
-                    target="_blank">立即重置密码</a></div>
-            <p style="line-height: 20px; margin-top: 20px; padding: 10px; background-color: #f2f2f2; font-size: 12px;">
-                如果该邮件不是由你本人操作，请勿进行激活！否则你的邮箱将会被他人绑定。 </p></td>
-    </tr>
-    <tr style="background-color: #fafafa; color: #999; height: 35px; margin: 0; padding: 0; text-align: center;">
-        <td style="margin: 0; padding: 0;">系统邮件，请勿直接回复。</td>
-    </tr>
-    </tbody>
-</table>
-`
 )
 
 type UserController struct {
@@ -105,6 +70,9 @@ func (c *UserController) Update() {
 		return
 	}
 	if email := c.GetString("email", c.User.Email); len(email) != 0 {
+		if c.User.Email != email {
+			c.User.Activate = false
+		}
 		c.User.Email = email
 	} else {
 		c.ToError("邮箱不能为空")
@@ -274,46 +242,12 @@ func (c *UserController) Forget() {
 	//向forget_email发请求获取，发送邮箱的html
 	// 得到token
 	token := sysutils.Token()
-	url := fmt.Sprintf("%s/user/forget_email?email=%s&token=%s", c.RemoteUrl(), email, token)
-	resp, err := httplib.Get(url).DoRequest()
-	if err != nil {
-		c.ToError(err.Error())
-	}
-	status := resp.StatusCode
-	bs, err := ioutil.ReadAll(resp.Body)
-	defer resp.Body.Close()
-	if err != nil {
-		c.ToError(err.Error())
-	}
-	if status != 200 {
-		c.ToError(string(bs))
-	}
-	//发送邮件
-	err = sysutils.SendEmail(sysutils.NewEmail(email, "找回密码", string(bs), "html"))
-	if err != nil {
+	if err := c.SendEmail("找回密码", email, token, "/user/forget"); err != nil {
 		c.ToError(err.Error())
 	}
 	//将token保存在缓存里面，缓存30分钟
 	c.cache.Put(email, token, 30*time.Minute)
 	c.ToOK("邮件发送成功！", "/user/forget")
-}
-
-// @router /forget_email [get]
-func (c *UserController) ForgetEmail() {
-	email := c.GetString("email", "")
-	if len(email) == 0 {
-		c.CustomAbort(500, "请输入邮箱")
-	}
-	c.Data["email"] = email
-	u, err := models.GetUserByEmail(email)
-	if err != nil {
-		c.CustomAbort(500, "输入的邮箱非法，不存在！")
-	}
-	token := c.GetString("token", "")
-	c.Data["User"] = u
-	c.Data["Host"] = c.Ctx.Request.Host
-	c.Data["AuthUrl"] = fmt.Sprintf("%s/user/forget?email=%s&token=%s", c.RemoteUrl(), email, token)
-	c.TplName = "user/forget_email.html"
 }
 
 // @router /repass [post]
@@ -333,4 +267,32 @@ func (c *UserController) Repass() {
 		c.ToError("修改失败：" + err.Error())
 	}
 	c.ToOK("修改成功！", "/")
+}
+
+// @router /activate [get]
+func (c *UserController) ActivatePage() {
+	if !c.IsLogin {
+		c.Redirect("/user/login", 302)
+		return
+	}
+
+	qemail := c.GetString("email", "")
+	if len(qemail) > 0 {
+		qtoken := c.GetString("token", "")
+		u, err := models.GetUserByEmail(qemail);
+		if err == nil && u != nil && u.Id != 0 && len(qtoken) > 0 {
+			val := c.cache.Get(qemail)
+			if val != nil {
+				if token, ok := val.(string); ok && qtoken == token {
+					//step = 3
+					//c.Data["User"] = u
+					//c.SetSession(USER_KEY, u)
+					c.User.Activate = true
+					models.SaveUser(c.User)
+					c.Data["User"] = c.User
+				}
+			}
+		}
+	}
+	c.TplName = "user/activate.html"
 }

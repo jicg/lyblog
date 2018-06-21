@@ -30,4 +30,8 @@ func init() {
 		beego.NSInclude(&controllers.UserController{}),
 	);
 	beego.AddNamespace(jnu)
+	api := beego.NewNamespace("/api",
+		beego.NSInclude(&controllers.ApiController{}),
+	);
+	beego.AddNamespace(api)
 }

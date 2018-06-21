@@ -29,7 +29,7 @@ func init() {
 			//头像地址
 			Avatar: "/static/images/avatar/default.png",
 			//是否认证 例： lyblog 作者
-			Approve: true,
+			Approve: "lyblog 作者",
 			//性别 男0 女1
 			Sex: 0,
 			//城市

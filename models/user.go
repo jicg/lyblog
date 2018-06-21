@@ -15,15 +15,16 @@ type User struct {
 	Pass string
 	//头像地址
 	Avatar string
-	//是否认证 例： lyblog 作者
-	Approve bool
+	//认证信息 例： lyblog 作者
+	Approve string
 	//性别 男0 女1
 	Sex int
 	//城市
 	City string
 	//签名
 	Sign string
-
+	//是否激活（邮箱）
+	Activate bool
 	//vip等级
 	Rmb string
 	//用户角色 管理员1 社区之光2 该号已被封-1

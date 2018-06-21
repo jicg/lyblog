@@ -5,7 +5,7 @@ import (
 	"strings"
 	"github.com/astaxie/beego"
 	"github.com/axgle/mahonia"
-	"github.com/murlokswarm/errors"
+	"errors"
 )
 
 var (
