@@ -1,12 +1,12 @@
 language: go
 
 go:
-  - 1.7.5
-  - 1.8.5
+#  - 1.7.5
+#  - 1.8.5
   - 1.9.2
 before_script:
-    - mkdir -p $TRAVIS_BUILD_DIR/data
-    - sh -c "touch $TRAVIS_BUILD_DIR/data/data.db;"
+#    - mkdir -p $TRAVIS_BUILD_DIR/data
+    - sh -c "touch $TRAVIS_BUILD_DIR/data.db;"
 install:
   - go get github.com/astaxie/beego
   - go get github.com/astaxie/beego/cache

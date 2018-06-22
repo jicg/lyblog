@@ -26,6 +26,7 @@ models/object.go
 views1
 views2
 conf/app.conf
+data.db
 
 .DS_Store
 */.DS_Store
