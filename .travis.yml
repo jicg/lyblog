@@ -5,6 +5,7 @@ go:
   - 1.8.5
   - 1.9.2
 before_script:
+    - mkdir -p $TRAVIS_BUILD_DIR/data
     - sh -c "touch $TRAVIS_BUILD_DIR/data/data.db;"
 install:
   - go get github.com/astaxie/beego
