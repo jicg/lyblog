@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>{{.U.UserName}}的主页 - {{.Title}}</title>
+{{ template "common/link.html" }}
+</head>
+<body class="fly-full">
+
+{{ template "common/header.html" .}}
+
+<div class="fly-home fly-panel" style="background-image: url();">
+  <img src="{{.U.Avatar}}" alt="{{.U.UserName}}">
+  {{ if  .U.Approve }}
+    <i class="iconfont icon-renzheng" title="Fly社区认证">{{.U.Approve}}</i>
+  {{ end }}
+  <h1>
+    {{.U.UserName}}
+    <i class="iconfont 
+    {{if eq2 .U.Sex 0 }}
+      icon-nan
+    {{ else if eq2 .U.Sex 0 }}
+      icon-nv
+    {{ end}}
+    "></i> 
+
+    {{ if noteq2 .U.Rmb 0}}
+      <i class="layui-badge fly-badge-vip">VIP{{.U.Rmb}}</i>
+    {{ end  }}
+    {{ if eq2 .U.Auth 1 }}
+      <span style="color:#c00;">（管理员）</span>
+    {{ else if eq2 .U.Auth 2 }}
+      <span style="color:#5FB878;">（社区之光）</span>
+    {{ else if eq2 .U.Auth -1 }}
+      <span>（该号已被封）</span>
+    {{end }}
+  </h1>
+
+  {{ if .U.Approve  }}
+    <p style="padding: 10px 0; color: #5FB878;">认证信息：{{ .U.Approve }}</p>
+  {{end  }}
+
+  <p class="fly-home-info">
+    <i class="iconfont icon-kiss" title="飞吻"></i><span style="color: #FF7200;">{{.U.Experience}}飞吻</span>
+    <i class="iconfont icon-shijian"></i><span>{{ date .U.JoinTime "Y-m-d"}} 加入</span>
+    <i class="iconfont icon-chengshi"></i><span>来自{{nvl .U.City "中国 某城"}}</span>
+  </p>
+
+  <p class="fly-home-sign">（{{ nvl .U.Sign "这个人懒得留下签名" }}）</p>
+
+{{/*{{if noteq2 U.Id  User.Id }}*/}}
+{{/*var userinfo = JSON.stringify({*/}}
+{{/*uid: 168*User.Id*/}}
+{{/*,avatar: User.Avatar*/}}
+{{/*,type: 'friend'*/}}
+{{/*,username: User.Username*/}}
+{{/*});*/}}
+{{/*}}*/}}
+{{/*<div class="fly-sns" data-user="{{ User }}">*/}}
+{{/*<a href="javascript:;" class="layui-btn layui-btn-primary fly-imActive" data-type="addFriend">加为好友</a>*/}}
+{{/*<a href="javascript:;" class="layui-btn layui-btn-normal fly-imActive" data-type="chat">发起会话</a>*/}}
+{{/*</div>*/}}
+{{/*{{end }}*/}}
+
+</div>
+
+<div class="layui-container">
+  <div class="layui-row layui-col-space15">
+    {{/*<div class="layui-col-md6 fly-home-jie">*/}}
+      {{/*<div class="fly-panel">*/}}
+        {{/*<h3 class="fly-panel-title">{{info.username}} 最近的提问</h3>*/}}
+        {{/*<ul class="jie-row">*/}}
+        {{/*{{# jie.forEach(function(item, index){ }}*/}}
+          {{/*<li>*/}}
+            {{/*{{ item.status == 1 ? '<span class="fly-jing layui-hide-xs">精</span>' : ''}}*/}}
+            {{/*<a href="/jie/{{item.id}}/" class="jie-title">{{= item.title}}</a>*/}}
+            {{/*<i>{{lay.time(item.time, 1)}}</i>*/}}
+            {{/*<em class="layui-hide-xs">{{item.hits}}阅/{{item.comment}}答</em>*/}}
+          {{/*</li>*/}}
+        {{/*{{# }); }}*/}}
+        {{/**/}}
+        {{/*{{# if(jie.length === 0){ }}*/}}
+        {{/*<div class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><i style="font-size:14px;">没有发表任何求解</i></div>*/}}
+        {{/*{{# } }}*/}}
+        {{/*</ul>*/}}
+      {{/*</div>*/}}
+    {{/*</div>*/}}
+    
+    {{/*<div class="layui-col-md6 fly-home-da">*/}}
+      {{/*<div class="fly-panel">*/}}
+        {{/*<h3 class="fly-panel-title">{{info.username}} 最近的回答</h3>*/}}
+        {{/*<ul class="home-jieda">*/}}
+        {{/*{{# da.forEach(function(item, index){ }}*/}}
+        {{/*<li>*/}}
+          {{/*<p>*/}}
+          {{/*<span>{{lay.time(item.time)}}</span>*/}}
+          {{/*在<a href="/jie/{{item.jid}}/#item-{{item.time}}" target="_blank">{{= item.title||'求解'}}</a>中回答：*/}}
+          {{/*</p>*/}}
+          {{/*<div class="home-dacontent">{{d.content(item.content)}}</div>*/}}
+        {{/*</li>*/}}
+        {{/*{{# }); }}*/}}
+        {{/**/}}
+        {{/*{{# if(da.length === 0){ }}*/}}
+        {{/*<div class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><span>没有回答任何问题</span></div>*/}}
+        {{/*{{# }; }}*/}}
+        {{/*</ul>*/}}
+      {{/*</div>*/}}
+    </div>
+  </div>
+</div>
+
+{{ template "common/footer.html" .}}
+
+</body>
+</html>

@@ -29,6 +29,7 @@ func init() {
 	jnu := beego.NewNamespace("/user",
 		beego.NSInclude(&controllers.UserController{}),
 	);
+	beego.Router("/u/:id",&controllers.UserController{},"get:Userhome")
 	beego.AddNamespace(jnu)
 	api := beego.NewNamespace("/api",
 		beego.NSInclude(&controllers.ApiController{}),

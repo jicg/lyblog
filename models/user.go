@@ -78,6 +78,14 @@ func GetUserByEmail(email string) (*User, error) {
 	return user, nil
 }
 
+func GetUserById(id int) (*User, error) {
+	user := &User{Id: id}
+	if err := o.Read(user, "Id"); err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
 func SaveUser(user *User) (int64, error) {
 	return o.Insert(user)
 }

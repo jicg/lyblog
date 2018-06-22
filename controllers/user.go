@@ -8,6 +8,7 @@ import (
 	"os"
 	"fmt"
 	"github.com/jicg/lyblog/sysutils"
+	"strconv"
 )
 
 const (
@@ -21,6 +22,38 @@ type UserController struct {
 
 func (this *UserController) NestPrepare() {
 	this.Data["Page"] = "user"
+}
+
+func (c *UserController) Userhome() {
+	id, _ := strconv.Atoi(c.Ctx.Input.Param(":id"))
+	if id > 0 {
+		id = id / 168
+	}
+	U, err := models.GetUserById(id)
+	if err != nil {
+		beego.Error(err)
+		c.Abort("404")
+	}
+	c.Data["U"] = U
+	c.TplName = "user/home.html"
+}
+
+// @router / [get]
+func (c *UserController) UserIndex() {
+	if !c.IsLogin {
+		c.Redirect("/user/login", 302)
+		return
+	}
+	c.TplName = "user/index.html"
+}
+
+// @router /message [get]
+func (c *UserController) UserMessage() {
+	if !c.IsLogin {
+		c.Redirect("/user/login", 302)
+		return
+	}
+	c.TplName = "user/message.html"
 }
 
 // @router /upload [post]

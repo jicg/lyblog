@@ -63,11 +63,18 @@ func initTemplate() {
 			return 0
 		}
 
-		y1, err := strconv.Atoi(fmt.Sprintf("%v", x))
+		y1, err := strconv.Atoi(fmt.Sprintf("%v", y))
 		if err != nil {
 			return 0
 		}
+		beego.Info("multiply ,", x1, ",", y1)
 		return x1 * y1
+	})
+	beego.AddFuncMap("nvl", func(str, def string) string {
+		if len(str) == 0 {
+			return def
+		}
+		return str
 	})
 }
 

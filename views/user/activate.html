@@ -25,13 +25,14 @@
                 <ul class="layui-form">
                     <li class="layui-form-li">
                         <label for="activate">您的邮箱：</label>
-                        <span class="layui-form-text">{{.User.Email}}
-                        {{ if .User.Activate  }}
-                            <em style="color:#999;">（已成功激活）</em>
-                        {{else}}
-                            <em style="color:#c00;">（尚未激活）</em>
-                        {{ end }}
-            </span>
+                        <span class="layui-form-text">
+                            {{.User.Email}}
+                            {{ if .User.Activate  }}
+                                <em style="color:#999;">（已成功激活）</em>
+                            {{else}}
+                                <em style="color:#c00;">（尚未激活）</em>
+                            {{ end }}
+                        </span>
                     </li>
                 {{ if not .User.Activate }}
                     <li class="layui-form-li" style="margin-top: 20px; line-height: 26px;">
