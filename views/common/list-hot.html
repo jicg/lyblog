@@ -1,0 +1,13 @@
+<dl class="fly-panel fly-list-one">
+    <dt class="fly-panel-title">本周热议</dt>
+{{ range .HotItems}}
+    <dd>
+        <a href="/jie/{{.Id}}/">{{ .Title }}</a>
+        <span><i class="iconfont icon-pinglun1"></i> {{.Content}}</span>
+    </dd>
+{{end }}
+
+{{/*{{# if(d.hotda.length === 0){ }}*/}}
+{{/*<div class="fly-none">没有相关数据</div>*/}}
+{{/*{{# } }}*/}}
+</dl>

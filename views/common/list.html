@@ -1,0 +1,36 @@
+<li>
+    <a href="/u/{{ multiply 168 .U.Id}}" class="fly-avatar">
+        <img src="{{.U.Avatar}}" alt="{{.U.UserName}}">
+    </a>
+    <h2>
+        <a href="/jie/{{.Id}}/">{{.Title}}</a>
+    </h2>
+    <div class="fly-list-info">
+        <a href="/u/{{multiply 168 .U.Id}}" link>
+            <cite>{{ .U.UserName }}</cite>
+        {{ if .U.Approve }}
+            <i class="iconfont icon-renzheng" title="认证信息：{{ .U.Approve }}"></i>
+        {{end  }}
+        {{ if noteq2 .U.Rmb 0 }}
+        {{.U.Rmb}}
+      {{ end }}
+        </a>
+        <span>{{ date .CTime "Y-m-d"}}</span>
+
+        <span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻">
+        <i class="iconfont icon-kiss"></i> {{ .Experience }}
+    </span>
+    {{ if eq2 .Status  1 }}
+        <span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>
+    {{ end }}
+        <span class="fly-list-nums">
+      <i class="iconfont icon-pinglun1" title="回答">
+      </i> {{.ReplyCount}}
+    </span>
+    </div>
+    <div class="fly-list-badge">
+    {{ if eq2 .Status  2 }}
+        <span class="layui-badge layui-bg-red">精帖</span>
+    {{end}}
+    </div>
+</li>

@@ -13,10 +13,10 @@ var (
 func init() {
 	orm.RegisterDriver("sqlite3", orm.DRSqlite)
 	// 需要在init中注册定义的model
-	orm.RegisterModel(new(User), new(Verification))
+	orm.RegisterModel(new(User), new(Verification), new(Note),new(Replay))
 	orm.RegisterDataBase("default", "sqlite3", "data.db")
 	orm.RunSyncdb("default", false, false)
-	// orm.Debug = true
+	 orm.Debug = true
 	o = orm.NewOrm()
 	o.Using("default")
 	count, _ := o.QueryTable(&User{}).Count();
