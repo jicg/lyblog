@@ -22,6 +22,13 @@ func init() {
 	//);
 	//beego.AddNamespace(jns)
 
+
+	jnjie := beego.NewNamespace("/jie",
+		beego.NSInclude(&controllers.JieController{}),
+	);
+	beego.AddNamespace(jnjie)
+
+
 	message := beego.NewNamespace("/message",
 		beego.NSInclude(&controllers.MessageController{}),
 	);
@@ -29,6 +36,8 @@ func init() {
 	jnu := beego.NewNamespace("/user",
 		beego.NSInclude(&controllers.UserController{}),
 	);
+
+
 	beego.Router("/u/:id",&controllers.UserController{},"get:Userhome")
 	beego.AddNamespace(jnu)
 	api := beego.NewNamespace("/api",

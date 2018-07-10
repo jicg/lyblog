@@ -1,16 +1,30 @@
 package controllers
 
 import (
-	"github.com/astaxie/beego"
-	"fmt"
+	"strconv"
+	"github.com/jicg/lyblog/models"
 )
 
-type JieIndexController struct {
-	beego.Controller
+type JieController struct {
+	BaseController
 }
 
-func (c *JieIndexController) Get() {
-	page := c.Ctx.Input.Param(":page");
-	c.Data["Year"] = "2017"
-	c.TplName = fmt.Sprintf("jie/%s.html", page)
+// @router /:id/ [get]
+func (c *JieController) Get() {
+	//page := c.Ctx.Input.Param(":page");
+	idstr := c.Ctx.Input.Param(":id")
+	var (
+		id   int
+		err  error
+		note *models.Note
+	)
+	if id, err = strconv.Atoi(idstr); err != nil {
+		c.Abort("404")
+	}
+	note, err = models.QueryNoteById(id)
+	if err != nil {
+		c.Abort("404")
+	}
+	c.Data["Note"] = note
+	c.TplName = "jie/detail.html"
 }
