@@ -6,7 +6,7 @@
         <a href="/jie/{{.Id}}/">{{.Title}}</a>
     </h2>
     <div class="fly-list-info">
-        <a href="/u/{{multiply 168 .U.Id}}" link>
+        <a href="/u/{{user .U.Id}}" link>
             <cite>{{ .U.UserName }}</cite>
         {{ if .U.Approve }}
             <i class="iconfont icon-renzheng" title="认证信息：{{ .U.Approve }}"></i>

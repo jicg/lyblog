@@ -42,13 +42,13 @@
                     {{end}}
 
                     {{ if eq2 .User.Auth 1 }}
-                    {{ if eg .Note.Stick  0  }}
+                    {{ if eg .Note.Top  0  }}
                         <span class="layui-btn layui-btn-xs jie-admin" type="set" field="stick" rank="0"
                               style="background-color:#ccc;">取消置顶</span>
                     {{ else  }}
                         <span class="layui-btn layui-btn-xs jie-admin" type="set" field="stick" rank="1">置顶</span>
                     {{ end}}
-                    {{ if .Note.Status 2 }}
+                    {{ if eq2 .Note.Status 2 }}
                         <span class="layui-btn layui-btn-xs jie-admin" type="set" field="status" rank="0"
                               style="background-color:#ccc;">取消加精</span>
                     {{else  }}
@@ -58,8 +58,8 @@
                     </div>
                     <span class="fly-list-nums">
                         <a href="#comment"><i class="iconfont" title="回答">&#xe60c;</i> {{.Note.ReplyCount}}</a>
-                    {{/*<i class="iconfont" title="人气">&#xe60b;</i> {{rows.hits}}*/}}
-          </span>
+                        <i class="iconfont" title="人气">&#xe60b;</i> {{.Note.VisitCount}}
+                    </span>
                 </div>
 
                 <div class="detail-about">
@@ -73,16 +73,17 @@
                             <i class="iconfont icon-renzheng" title="认证信息：{{ .Note.U.Approve }}"></i>
                         {{end }}
                         {{ if .Note.U.Rmb }}
-            {{ .Note.U.Rmb }}
-            {{ end }}
+                            {{ .Note.U.Rmb }}
+                        {{ end }}
                         </a>
                         <span>{{ date .Note.CTime "Y-m-d"}}</span>
                     </div>
                     <div class="detail-hits" id="LAY_jieAdmin" data-id="{{.Note.Id}}">
                         <span style="padding-right: 10px; color: #FF7200">悬赏：{{.Note.Experience}}飞吻</span>
-                    {{/*{{# if .User.username && myself && rows.accept == -1) || user.auth == 1){ }}*/}}
-                    {{/*<span class="layui-btn layui-btn-xs jie-admin" type="edit"><a href="/jie/edit/{{rows.id}}">编辑此贴</a></span>*/}}
-                    {{/*{{# } }}*/}}
+                    {{ if eq2 .Note.U.Id .User.Id }}
+                        <span class="layui-btn layui-btn-xs jie-admin" type="edit">
+                            <a href="/jie/edit/{{.Note.Id}}">编辑此贴</a></span>
+                    {{end  }}
                     </div>
                 </div>
                 <div class="detail-body photos">
@@ -90,114 +91,106 @@
                 </div>
             </div>
 
-        {{/*{{# var jieda = rows.jieda; }}*/}}
-        {{/**/}}
-        {{/*<div class="fly-panel detail-box" id="flyReply">*/}}
-        {{/*<fieldset class="layui-elem-field layui-field-title" style="text-align: center;">*/}}
-        {{/*<legend>回帖</legend>*/}}
-        {{/*</fieldset>*/}}
 
-        {{/*<ul class="jieda" id="jieda">*/}}
-        {{/*{{# jieda.forEach(function(item, index){ */}}
-        {{/*var myda = item.user.username === user.username;*/}}
-        {{/*}}*/}}
-        {{/*<li data-id="{{item.id}}" {{item.id == rows.accept ? 'class="jieda-daan"' : '' }}>*/}}
-        {{/*<a name="item-{{item.time}}"></a>*/}}
-        {{/*<div class="detail-about detail-about-reply">*/}}
-        {{/*<a class="fly-avatar" href="/u/{{168*item.user.id}}/">*/}}
-        {{/*<img src="{{item.user.avatar}}" alt="{{item.user.username}}">*/}}
-        {{/*</a>*/}}
-        {{/*<div class="fly-detail-user">*/}}
-        {{/*<a href="/u/{{168*item.user.id}}/" class="fly-link">*/}}
-        {{/*<cite>{{item.user.username}}</cite>*/}}
-        {{/*{{# if(item.user.approve){ }}*/}}
-        {{/*<i class="iconfont icon-renzheng" title="认证信息：{{ item.user.approve }}"></i>*/}}
-        {{/*{{# } }}*/}}
-        {{/*{{# if(item.user.rmb){ }}*/}}
-        {{/*{{ lay.util.vipBadge(item.user.rmb) }}*/}}
-        {{/*{{# } }}                 */}}
-        {{/*</a>*/}}
+            <div class="fly-panel detail-box" id="flyReply">
+                <fieldset class="layui-elem-field layui-field-title"
+                          style="text-align: center;">
+                    <legend>回帖</legend>
+                </fieldset>
 
-        {{/*{{# if(item.user.username === rows.username){ }}*/}}
-        {{/*<span>(楼主)</span>*/}}
-        {{/*{{# } else if(item.user.auth == 1) { }}*/}}
-        {{/*<span style="color:#5FB878">(管理员)</span>*/}}
-        {{/*{{# } else if(item.user.auth == 2) { }}*/}}
-        {{/*<span style="color:#FF9E3F">（社区之光）</span>*/}}
-        {{/*{{# } else if(item.user.auth == -1) { }}*/}}
-        {{/*<span style="color:#999">（该号已被封）</span>*/}}
-        {{/*{{# } }}*/}}
-        {{/*</div>*/}}
+                <ul class="jieda" id="jieda">
+                {{ range .Reps }}
+                    <li data-id="{{.Id}}" class="jieda-daan">
+                        <a name="item-$$time"></a>
+                        <div class="detail-about detail-about-reply">
+                            <a class="fly-avatar" href="/u/{{.U.Id}}/">
+                                <img src="{{.U.Avatar}}" alt="{{.U.UserName}}">
+                            </a>
+                            <div class="fly-detail-user">
+                                <a href="/u/{{user .U.Id}}/" class="fly-link">
+                                    <cite>{{.U.UserName}}</cite>
+                                {{ if .U.Approve }}
+                                    <i class="iconfont icon-renzheng" title="认证信息：{{ .U.Approve }}"></i>{{ end }}
+                                {{ if .U.Rmb  }}{{ .U.Rmb }}{{end }}
+                                </a>
 
-        {{/*<div class="detail-hits">*/}}
-        {{/*<span>{{lay.time(item.time, true)}}</span>*/}}
-        {{/*</div>*/}}
+                            {{ if eq2 .U.Id  $.Note.U.Id }}
+                                <span>(楼主)</span>
+                            {{else if eq2 .U.Auth 1 }}
+                                <span style="color:#5FB878">(管理员)</span>
+                            {{ else if eq2 .U.Auth 2 }}
+                                <span style="color:#FF9E3F">（社区之光）</span>
+                            {{else if eq2 .U.Auth -1 }}
+                                <span style="color:#999">（该号已被封）</span>
+                            {{end }}
+                            </div>
 
-        {{/*{{# if(item.id == rows.accept){ }}*/}}
-        {{/*<i class="iconfont icon-caina" title="最佳答案"></i>*/}}
-        {{/*{{# } }}*/}}
-        {{/*</div>*/}}
-        {{/*<div class="detail-body jieda-body photos">*/}}
-        {{/*{{ d.content(item.content) }}*/}}
-        {{/*</div>*/}}
-        {{/*<div class="jieda-reply">*/}}
-        {{/*<span class="jieda-zan {{d.session['zan'+item.id] ? 'zanok' : ''}}" type="zan">*/}}
-        {{/*<i class="iconfont icon-zan"></i>*/}}
-        {{/*<em>{{item.praise}}</em>*/}}
-        {{/*</span>*/}}
-        {{/*<span type="reply">*/}}
-        {{/*<i class="iconfont icon-svgmoban53"></i>*/}}
-        {{/*回复*/}}
-        {{/*</span>*/}}
-        {{/*{{# if(user.auth == 1 || user.auth == 2 || (user.username && myself && !myda)){ }}*/}}
-        {{/*<div class="jieda-admin">*/}}
-        {{/*{{# if(user.auth == 1 || (user.auth == 2 && item.accept != 1)){ }}*/}}
-        {{/*<span type="edit">*/}}
-        {{/*编辑*/}}
-        {{/*</span>*/}}
-        {{/*<span type="del">*/}}
-        {{/*删除*/}}
-        {{/*</span>*/}}
-        {{/*{{# if(rows.accept == -1){ }}  */}}
-        {{/*<span class="jieda-accept" type="accept">*/}}
-        {{/*采纳*/}}
-        {{/*</span>*/}}
-        {{/*{{# } }}*/}}
-        {{/*{{# } else if(rows.accept == -1 && !myda){ }}*/}}
-        {{/*<span class="jieda-accept" type="accept">*/}}
-        {{/*采纳*/}}
-        {{/*</span>*/}}
-        {{/*{{# } }}*/}}
-        {{/*</div>*/}}
-        {{/*{{# } }}*/}}
-        {{/*</div>*/}}
-        {{/*</li>*/}}
-        {{/*{{# }); if(jieda.length === 0){ }}*/}}
-        {{/*<li class="fly-none">消灭零回复</li>*/}}
-        {{/*{{# } }}*/}}
-        {{/*</ul>*/}}
-        {{/**/}}
-        {{/*<div style="text-align: center">*/}}
-        {{/*{{ d.laypage }}*/}}
-        {{/*</div>*/}}
+                            <div class="detail-hits">
+                                <span>{{date .CTime "Y-m-d"}}</span>
+                            </div>
 
-            <div class="layui-form layui-form-pane">
-                <form action="/jie/reply/" method="post">
-                    <div class="layui-form-item layui-form-text">
-                        <a name="comment"></a>
-                        <div class="layui-input-block">
+                        {{/*{{# if(item.id == rows.accept){ }}*/}}
+                        {{/*<i class="iconfont icon-caina" title="最佳答案"></i>*/}}
+                        {{/*{{# } }}*/}}
+                        </div>
+                        <div class="detail-body jieda-body photos">
+                        {{ .Content }}
+                        </div>
+                        <div class="jieda-reply">
+        <span class="jieda-zan " type="zan">
+            {{/*zanok*/}}
+                <i class="iconfont icon-zan"></i>
+        <em>{{.ThumbCount}}</em>
+        </span>
+                            <span type="reply">
+            <i class="iconfont icon-svgmoban53"></i>回复
+        </span>
+                        {{/*{{# if(user.auth == 1 || user.auth == 2 || (user.username && myself && !myda)){ }}*/}}
+                        {{/*<div class="jieda-admin">*/}}
+                        {{/*{{# if(user.auth == 1 || (user.auth == 2 && item.accept != 1)){ }}*/}}
+                        {{/*<span type="edit">*/}}
+                        {{/*编辑*/}}
+                        {{/*</span>*/}}
+                        {{/*<span type="del">*/}}
+                        {{/*删除*/}}
+                            </span>
+                        {{/*{{ if eq2 .Accept  -1 }}*/}}
+                        {{/*<span class="jieda-accept" type="accept">采纳</span>*/}}
+                        {{/*{{end  }}*/}}
+                        {{/*{{ if eq .U.Accept -1 }}*/}}
+                        {{/*<span class="jieda-accept" type="accept">*/}}
+                        {{/*采纳*/}}
+                        {{/*</span>*/}}
+                        {{/*{{end }}*/}}
+                        </div>
+                    </li>
+                {{end}}
+                {{/*{{ if jieda.length === 0){ }}*/}}
+                {{/*<li class="fly-none">消灭零回复</li>*/}}
+                {{/*{{# } }}*/}}
+                </ul>
+
+                <div style="text-align: center">
+                {{/*{{ d.laypage }}*/}}
+                </div>
+
+                <div class="layui-form layui-form-pane">
+                    <form action="/jie/reply/" method="post">
+                        <div class="layui-form-item layui-form-text">
+                            <a name="comment"></a>
+                            <div class="layui-input-block">
                         <textarea id="L_content" name="content" required lay-verify="required" placeholder="请输入内容"
                                   class="layui-textarea fly-editor" style="height: 150px;"></textarea>
+                            </div>
                         </div>
-                    </div>
-                    <div class="layui-form-item">
-                    {{/*<input type="hidden" name="jid" value="{{rows.id}}">*/}}
-                    {{/*<input type="hidden" name="daPages" value="{{rows.jieda.pages}}">*/}}
-                        <button class="layui-btn" lay-filter="*" lay-submit>提交回复</button>
-                    </div>
-                </form>
+                        <div class="layui-form-item">
+                        {{/*<input type="hidden" name="jid" value="{{rows.id}}">*/}}
+                        {{/*<input type="hidden" name="daPages" value="{{rows.jieda.pages}}">*/}}
+                            <button class="layui-btn" lay-filter="*" lay-submit>提交回复</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        {{/*</div>*/}}
         </div>
         <div class="layui-col-md4">
         {{/*{{ include ../common/list-hot }}*/}}
@@ -216,7 +209,7 @@
     </div>
 </div>
 
-{{ template "common/footer.html" }}
+{{ template "common/footer.html" .}}
 
 </body>
 </html>

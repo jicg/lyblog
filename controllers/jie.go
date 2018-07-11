@@ -9,14 +9,20 @@ type JieController struct {
 	BaseController
 }
 
+
+func (this *JieController) NestPrepare() {
+	this.Data["Page"] = "jie"
+}
+
 // @router /:id/ [get]
 func (c *JieController) Get() {
 	//page := c.Ctx.Input.Param(":page");
 	idstr := c.Ctx.Input.Param(":id")
 	var (
-		id   int
-		err  error
-		note *models.Note
+		id    int
+		err   error
+		note  *models.Note
+		resps []*models.Replay
 	)
 	if id, err = strconv.Atoi(idstr); err != nil {
 		c.Abort("404")
@@ -25,6 +31,11 @@ func (c *JieController) Get() {
 	if err != nil {
 		c.Abort("404")
 	}
+	if resps, err = models.QueryRespsByNoteIdAndPage(note.Id, 0, 10); err != nil {
+		c.Abort("404")
+	}
+	note.Reps = resps
 	c.Data["Note"] = note
+	c.Data["Reps"] = resps
 	c.TplName = "jie/detail.html"
 }

@@ -57,6 +57,9 @@ func initTemplate() {
 	beego.AddFuncMap("noteq2", func(x, y interface{}) bool {
 		return !(fmt.Sprintf("%v", x) == fmt.Sprintf("%v", y))
 	})
+	beego.AddFuncMap("user", func(id int) string {
+		return fmt.Sprintf("%d", id*168)
+	})
 	beego.AddFuncMap("multiply", func(x, y interface{}) int {
 		if x == nil || y == nil {
 			return 0
